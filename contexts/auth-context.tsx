@@ -1,10 +1,11 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase/config';
+import { getUserFromFirestore, convertFirebaseUser } from '@/lib/firebase/auth';
 import type { User } from '@/types/user';
 import {
-  getCurrentUser,
-  setCurrentUser,
   login as loginUser,
   signUp as signUpUser,
   logout as logoutUser,
@@ -17,9 +18,9 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
-  logout: () => void;
-  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string; resetToken?: string }>;
-  resetPassword: (token: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (code: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,38 +33,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
-    setUser(currentUser);
-    setIsLoading(false);
+    // Firebase Authenticationの認証状態をリアルタイム監視
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // Firestoreからユーザー情報を取得
+        const userData = await getUserFromFirestore(firebaseUser.uid);
+        if (userData) {
+          setUser(userData);
+        } else {
+          // Firestoreにデータがない場合はFirebase Authから生成
+          setUser(convertFirebaseUser(firebaseUser));
+        }
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    // クリーンアップ関数
+    return () => unsubscribe();
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const result = loginUser({ email, password });
-    if (result.success && result.user) {
-      setUser(result.user);
-    }
+    const result = await loginUser({ email, password });
+    // onAuthStateChangedが自動的にユーザー状態を更新するため、ここでsetUserは不要
     return result;
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, name: string) => {
-    const result = signUpUser({ email, password, name });
-    if (result.success && result.user) {
-      setUser(result.user);
-    }
+    const result = await signUpUser({ email, password, name });
+    // onAuthStateChangedが自動的にユーザー状態を更新するため、ここでsetUserは不要
     return result;
   }, []);
 
-  const logout = useCallback(() => {
-    logoutUser();
-    setUser(null);
+  const logout = useCallback(async () => {
+    await logoutUser();
+    // onAuthStateChangedが自動的にユーザー状態を更新するため、ここでsetUserは不要
   }, []);
 
   const requestPasswordReset = useCallback(async (email: string) => {
     return requestPasswordResetUser(email);
   }, []);
 
-  const resetPassword = useCallback(async (token: string, newPassword: string) => {
-    return resetPasswordUser(token, newPassword);
+  const resetPassword = useCallback(async (code: string, newPassword: string) => {
+    return resetPasswordUser(code, newPassword);
   }, []);
 
   return (

@@ -198,10 +198,7 @@ export function ForgotPasswordForm({ onBack }: { onBack: () => void }) {
       setError(result.error || 'パスワードリセットリクエストに失敗しました');
     } else {
       setIsSubmitted(true);
-      // デモ用にトークンを保存（実際のアプリではメールに送信）
-      if (result.resetToken) {
-        setResetToken(result.resetToken);
-      }
+      // Firebase Authenticationではメールが自動送信されます
     }
     setIsLoading(false);
   };

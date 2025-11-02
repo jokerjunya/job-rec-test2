@@ -19,9 +19,9 @@ export function useJobFeedback(jobId: string) {
    * フィードバック状態を読み込む
    */
   useEffect(() => {
-    const loadFeedback = () => {
+    const loadFeedback = async () => {
       try {
-        const savedFeedback = getFeedbackByJobId(jobId);
+        const savedFeedback = await getFeedbackByJobId(jobId);
         setFeedback(savedFeedback);
       } catch (error) {
         console.error('Failed to load feedback:', error);
@@ -37,7 +37,7 @@ export function useJobFeedback(jobId: string) {
    * フィードバックを保存
    */
   const saveFeedback = useCallback(
-    (feedbackType: FeedbackType) => {
+    async (feedbackType: FeedbackType) => {
       const newFeedback = {
         jobId,
         feedback: feedbackType,
@@ -45,9 +45,9 @@ export function useJobFeedback(jobId: string) {
       };
 
       try {
-        saveFeedbackToStorage(newFeedback);
+        await saveFeedbackToStorage(newFeedback);
         // 保存後にフィードバックを再読み込み
-        const savedFeedback = getFeedbackByJobId(jobId);
+        const savedFeedback = await getFeedbackByJobId(jobId);
         setFeedback(savedFeedback);
       } catch (error) {
         console.error('Failed to save feedback:', error);
@@ -59,9 +59,9 @@ export function useJobFeedback(jobId: string) {
   /**
    * フィードバックを削除
    */
-  const removeFeedback = useCallback(() => {
+  const removeFeedback = useCallback(async () => {
     try {
-      removeFeedbackFromStorage(jobId);
+      await removeFeedbackFromStorage(jobId);
       setFeedback(null);
     } catch (error) {
       console.error('Failed to remove feedback:', error);
@@ -72,11 +72,11 @@ export function useJobFeedback(jobId: string) {
    * フィードバックを切り替え
    */
   const toggleFeedback = useCallback(
-    (feedbackType: FeedbackType) => {
+    async (feedbackType: FeedbackType) => {
       if (feedback?.feedback === feedbackType) {
-        removeFeedback();
+        await removeFeedback();
       } else {
-        saveFeedback(feedbackType);
+        await saveFeedback(feedbackType);
       }
     },
     [feedback, saveFeedback, removeFeedback]

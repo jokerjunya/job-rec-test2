@@ -44,8 +44,11 @@ function LogsPageContent() {
     }
 
     if (user) {
-      const userFeedbacks = getUserFeedbacks();
-      setFeedbacks(userFeedbacks);
+      const loadFeedbacks = async () => {
+        const userFeedbacks = await getUserFeedbacks();
+        setFeedbacks(userFeedbacks);
+      };
+      loadFeedbacks();
     }
   }, [user, authLoading, router]);
 

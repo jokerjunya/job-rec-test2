@@ -1,39 +1,271 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Recommendation Test Project
 
-## Getting Started
+求人レコメンデーションシステムのプロトタイプ。Next.js + TypeScript + Firebaseで構築されています。
 
-First, run the development server:
+## 🚀 Getting Started
+
+### 1. Firebase設定
+
+#### Firebase プロジェクトの作成
+1. [Firebase Console](https://console.firebase.google.com/)にアクセス
+2. 新しいプロジェクトを作成
+3. Authentication を有効化（メール/パスワード認証を有効化）
+4. Firestore Database を作成（テストモードで開始）
+
+#### 環境変数の設定
+`.env.local`ファイルをプロジェクトルートに作成し、Firebase設定を追加：
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Firestoreセキュリティルールのデプロイ
+```bash
+# Firebase CLIのインストール（初回のみ）
+npm install -g firebase-tools
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Firebaseにログイン
+firebase login
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# プロジェクトの初期化
+firebase init firestore
 
-## Learn More
+# セキュリティルールのデプロイ
+firebase deploy --only firestore:rules
+```
 
-To learn more about Next.js, take a look at the following resources:
+#### ダミーデータのマイグレーション（オプション）
+サービスアカウントキーを取得し、ダミーデータをFirestoreに投入：
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# サービスアカウントキーを取得（Firebase Console > プロジェクト設定 > サービスアカウント）
+# ダウンロードしたJSONファイルのパスを環境変数に設定
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/serviceAccountKey.json"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# マイグレーションスクリプトを実行
+npm run migrate:firebase
+```
 
-## Deploy on Vercel
+### 2. 開発サーバーを起動
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm install
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[http://localhost:3000](http://localhost:3000) をブラウザで開いてください。
+
+## 🧪 テスト
+
+```bash
+# すべてのテストを実行
+npm test
+
+# ウォッチモードでテスト実行
+npm run test:watch
+
+# カバレッジレポート生成
+npm run test:coverage
+```
+
+## ✨ 主な機能
+
+### 🎯 レコメンデーション機能（NEW!）
+
+**ユーザーベース協調フィルタリングによる求人推薦システム**
+
+- **類似ユーザー発見**: あなたと似た好みのユーザーを自動的に発見
+  - コサイン類似度とピアソン相関係数によるハイブリッド計算
+  - 上位3人の類似ユーザーを表示
+  
+- **パーソナライズドレコメンド**: 類似ユーザーの行動に基づいた求人推薦
+  - 協調フィルタリングアルゴリズムによる予測評価
+  - レコメンド理由の可視化
+  - 5件の厳選されたおすすめ求人を表示
+
+- **リアルなダミーデータ**: 35人のダミーユーザーと597件の評価データ
+  - ユーザープロファイルに基づいた一貫性のある評価行動
+  - 経験レベル、興味分野、給与期待値などの多様な属性
+  - 時系列を考慮したフィードバックデータ
+
+アクセス: ログイン後、ナビゲーションバーの「おすすめ」タブから利用可能
+
+### 📊 データ基盤の特徴
+
+### 最近の改善点（2025-11-02）
+
+#### レコメンデーションシステムの追加
+- **協調フィルタリング**: ユーザー間の類似度計算とレコメンド生成
+- **類似度計算手法**:
+  - コサイン類似度: ベクトルの角度の近さを測定
+  - ピアソン相関係数: 評価傾向の相関を測定
+  - ジャッカード係数: 評価アイテムの集合の類似度を測定
+  - ハイブリッド手法: 複数手法の加重平均
+- **データ検証**: 35人のユーザー、597件の評価データ（Like率: 44%）
+- **テストカバレッジ**: 86個のテストケース（類似度計算、レコメンド生成を含む）
+
+#### 1. ダミーデータの品質向上
+- **職種とスキルのマッピング**: 各職種に関連性の高いスキルを優先的に割り当て
+  - 例：フロントエンドエンジニアには React, TypeScript, Next.js など
+  - 検証結果：60-100%のスキルが職種に関連
+- **企業と業界の関連性**: 企業名に基づいた現実的な業界割り当て
+  - 例：フィンテックソリューションズ → 金融・FinTech
+  - 検証結果：100%の一貫性を確認
+
+#### 2. パフォーマンス最適化
+- **Fisher-Yatesシャッフル実装**: 偏りのない均等な確率でのシャッフル
+  - 検証結果：10,000回のテストで期待値±1%以内の均等性を確認
+- **getRandomElements最適化**:
+  - 少数選択時（< 50%）: O(n) の重複チェック方式
+  - 多数選択時（≥ 50%）: O(n log n) のシャッフル方式
+  - 自動的に最適なアルゴリズムを選択
+
+#### 3. テストコードの追加
+- **テストカバレッジ**: 86個のテストケースで主要機能をカバー
+  - データ生成ユーティリティのテスト
+  - 相関分析ロジックのテスト
+  - データジェネレーターのテスト
+  - ユーザー類似度計算のテスト（NEW!）
+  - レコメンデーションエンジンのテスト（NEW!）
+- **テストフレームワーク**: Jest + Testing Library
+
+### データ統計
+- 総求人数: 100件
+- 総ユーザー数: 35人（NEW!）
+- 総評価数: 597件（NEW!）
+- Like率: 44%（NEW!）
+- 平均評価数/人: 17件（NEW!）
+- 職種の種類: 48種類
+- 企業の種類: 20社
+- スキルの種類: 91種類
+- 業界の種類: 16業界
+
+## 🏗️ プロジェクト構造
+
+```
+.
+├── app/                         # Next.js App Router
+│   ├── recommendations/         # レコメンドページ（NEW!）
+│   ├── compare/                 # 比較ページ
+│   └── logs/                    # 履歴ページ
+├── components/                  # Reactコンポーネント
+│   ├── similar-users.tsx        # 類似ユーザー表示（NEW!）
+│   ├── recommended-jobs.tsx     # レコメンド求人表示（NEW!）
+│   ├── job-card.tsx
+│   ├── job-list.tsx
+│   └── ...
+├── contexts/                    # Reactコンテキスト
+│   └── auth-context.tsx
+├── data/                        # ダミーデータ生成
+│   ├── dummy-data.ts            # データ統合エクスポート（NEW!）
+│   ├── jobs.ts
+│   └── generators/              # データ生成ロジック
+│       ├── user-profiles.ts     # ユーザープロファイル生成（NEW!）
+│       ├── user-feedbacks.ts    # フィードバックデータ生成（NEW!）
+│       ├── mappings.ts          # 職種-スキル、企業-業界のマッピング
+│       ├── utils.ts             # ユーティリティ関数
+│       └── company-attributes.ts
+├── hooks/                       # カスタムフック
+│   └── use-job-feedback.ts
+├── types/                       # TypeScript型定義
+│   ├── user-profile.ts          # ユーザープロファイル型（NEW!）
+│   ├── job.ts
+│   └── user.ts
+├── utils/                       # ユーティリティ関数
+│   ├── user-similarity.ts       # ユーザー類似度計算（NEW!）
+│   ├── recommendation.ts        # レコメンドエンジン（NEW!）
+│   ├── analysis.ts              # 相関分析
+│   └── local-storage.ts         # ローカルストレージ管理
+├── scripts/                     # 開発支援スクリプト
+│   ├── verify-dummy-data.ts     # ダミーデータ検証（NEW!）
+│   ├── check-data.ts            # データ構造確認
+│   └── verify-improvements.ts   # 改善内容の検証
+└── __tests__/                   # テストコード
+    ├── utils/
+    │   ├── user-similarity.test.ts       # 類似度計算テスト（NEW!）
+    │   ├── recommendation.test.ts        # レコメンドテスト（NEW!）
+    │   └── ...
+    └── data/
+        ├── user-profiles.test.ts         # プロファイル生成テスト（NEW!）
+        └── ...
+```
+
+## 📝 開発スクリプト
+
+```bash
+# 開発サーバー起動
+npm run dev
+
+# プロダクションビルド
+npm run build
+
+# プロダクションサーバー起動
+npm start
+
+# Lintチェック
+npm run lint
+
+# テスト実行
+npm test
+
+# テストカバレッジ
+npm run test:coverage
+
+# データ構造確認
+npx tsx scripts/check-data.ts
+
+# 改善内容の検証
+npx tsx scripts/verify-improvements.ts
+
+# ダミーデータ検証
+npx tsx scripts/verify-dummy-data.ts
+
+# Firebaseマイグレーション（NEW!）
+npm run migrate:firebase
+```
+
+## 🎯 技術スタック
+
+- **フレームワーク**: Next.js 16.0.1
+- **言語**: TypeScript 5
+- **UI**: React 19.2.0
+- **スタイリング**: Tailwind CSS 4
+- **テスト**: Jest 29.7.0 + Testing Library
+- **アイコン**: Lucide React
+- **バックエンド**: Firebase (Authentication + Firestore)
+- **認証**: Firebase Authentication（メール/パスワード認証）
+- **データベース**: Cloud Firestore
+
+## 🔒 セキュリティとデータ管理
+
+### Firebase Authentication
+- メール/パスワード認証を使用
+- パスワードのハッシュ化と安全な保存は自動処理
+- パスワードリセット機能（メール送信）
+
+### Firestore データ構造
+- **users**: ユーザー情報（自分のデータのみアクセス可能）
+- **jobs**: 求人情報（全ユーザー閲覧可能、ダミーデータにはisDummyフラグ付与）
+- **feedbacks**: フィードバック情報（自分のフィードバックのみアクセス可能）
+- **userProfiles**: ユーザープロファイル（自分のプロファイルのみアクセス可能）
+
+### セキュリティルール
+Firestoreセキュリティルール（`firestore.rules`）により、以下を保証：
+- ユーザーは自分のデータのみ読み書き可能
+- 求人情報は認証済みユーザーのみ閲覧可能
+- フィードバックは作成したユーザーのみ変更・削除可能
+
+## 📚 Learn More
+
+Next.jsについて詳しく知りたい場合：
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
 
 ## Git Worktree の使い方
 

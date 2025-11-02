@@ -1,11 +1,12 @@
 'use client';
 
 import { JobSwipe } from '@/components/job-swipe';
-import { jobs } from '@/data/jobs';
+import { getAllJobs } from '@/utils/jobs';
 import { useAuth } from '@/contexts/auth-context';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { AuthModal } from '@/components/auth-modal';
 import { useRouter } from 'next/navigation';
+import type { EnhancedJob } from '@/types/job';
 import {
   JobFiltersComponent,
   type JobFilters,
@@ -18,6 +19,8 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 
 export default function Home() {
   const { user, isLoading } = useAuth();
+  const [jobs, setJobs] = useState<EnhancedJob[]>([]);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [filters, setFilters] = useState<JobFilters>({
@@ -27,6 +30,21 @@ export default function Home() {
     location: '',
   });
   const router = useRouter();
+
+  // 求人データを取得
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const allJobs = await getAllJobs();
+        setJobs(allJobs);
+      } catch (error) {
+        console.error('Failed to load jobs:', error);
+      } finally {
+        setIsLoadingJobs(false);
+      }
+    };
+    loadJobs();
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -92,7 +110,7 @@ export default function Home() {
     });
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isLoadingJobs) {
     return <LoadingSpinner />;
   }
 
