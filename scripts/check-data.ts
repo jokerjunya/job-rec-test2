@@ -2,7 +2,7 @@
  * ダミーデータの構造確認用スクリプト
  * 実際に生成されるデータの構造を確認するために使用
  */
-import { enhancedJobs } from '../data/jobs';
+import { jobs as enhancedJobs } from '../data/jobs';
 
 // 最初の3件のデータを表示
 console.log('=== ダミーデータの構造確認 ===\n');

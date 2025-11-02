@@ -1,127 +1,39 @@
-# Job Recommendation Test Project
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-求人レコメンデーションシステムのプロトタイプ。Next.js + TypeScriptで構築されています。
+## Getting Started
 
-## 🚀 Getting Started
-
-開発サーバーを起動：
+First, run the development server:
 
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-[http://localhost:3000](http://localhost:3000) をブラウザで開いてください。
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 🧪 テスト
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```bash
-# すべてのテストを実行
-npm test
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-# ウォッチモードでテスト実行
-npm run test:watch
+## Learn More
 
-# カバレッジレポート生成
-npm run test:coverage
-```
+To learn more about Next.js, take a look at the following resources:
 
-## 📊 データ基盤の特徴
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### 最近の改善点（2025-11-02）
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-#### 1. ダミーデータの品質向上
-- **職種とスキルのマッピング**: 各職種に関連性の高いスキルを優先的に割り当て
-  - 例：フロントエンドエンジニアには React, TypeScript, Next.js など
-  - 検証結果：60-100%のスキルが職種に関連
-- **企業と業界の関連性**: 企業名に基づいた現実的な業界割り当て
-  - 例：フィンテックソリューションズ → 金融・FinTech
-  - 検証結果：100%の一貫性を確認
+## Deploy on Vercel
 
-#### 2. パフォーマンス最適化
-- **Fisher-Yatesシャッフル実装**: 偏りのない均等な確率でのシャッフル
-  - 検証結果：10,000回のテストで期待値±1%以内の均等性を確認
-- **getRandomElements最適化**:
-  - 少数選択時（< 50%）: O(n) の重複チェック方式
-  - 多数選択時（≥ 50%）: O(n log n) のシャッフル方式
-  - 自動的に最適なアルゴリズムを選択
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-#### 3. テストコードの追加
-- **テストカバレッジ**: 59個のテストケースで主要機能をカバー
-  - データ生成ユーティリティのテスト
-  - 相関分析ロジックのテスト
-  - データジェネレーターのテスト
-- **テストフレームワーク**: Jest + Testing Library
-
-### データ統計
-- 総求人数: 100件
-- 職種の種類: 48種類
-- 企業の種類: 20社
-- スキルの種類: 91種類
-- 業界の種類: 16業界
-
-## 🏗️ プロジェクト構造
-
-```
-.
-├── app/                    # Next.js App Router
-├── components/             # Reactコンポーネント
-├── contexts/              # Reactコンテキスト
-├── data/                  # ダミーデータ生成
-│   └── generators/        # データ生成ロジック
-│       ├── mappings.ts    # 職種-スキル、企業-業界のマッピング
-│       ├── utils.ts       # ユーティリティ関数（Fisher-Yatesシャッフルなど）
-│       └── company-attributes.ts
-├── hooks/                 # カスタムフック
-├── types/                 # TypeScript型定義
-├── utils/                 # ユーティリティ関数
-│   ├── analysis.ts        # 相関分析
-│   └── local-storage.ts   # ローカルストレージ管理
-├── scripts/               # 開発支援スクリプト
-│   ├── check-data.ts      # データ構造確認
-│   └── verify-improvements.ts  # 改善内容の検証
-└── __tests__/             # テストコード
-```
-
-## 📝 開発スクリプト
-
-```bash
-# 開発サーバー起動
-npm run dev
-
-# プロダクションビルド
-npm run build
-
-# プロダクションサーバー起動
-npm start
-
-# Lintチェック
-npm run lint
-
-# テスト実行
-npm test
-
-# データ構造確認
-npx tsx scripts/check-data.ts
-
-# 改善内容の検証
-npx tsx scripts/verify-improvements.ts
-```
-
-## 🎯 技術スタック
-
-- **フレームワーク**: Next.js 16.0.1
-- **言語**: TypeScript 5
-- **UI**: React 19.2.0
-- **スタイリング**: Tailwind CSS 4
-- **テスト**: Jest 29.7.0 + Testing Library
-- **アイコン**: Lucide React
-
-## 📚 Learn More
-
-Next.jsについて詳しく知りたい場合：
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Learn Next.js](https://nextjs.org/learn)
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ## Git Worktree の使い方
 

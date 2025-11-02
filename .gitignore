@@ -42,4 +42,3 @@ next-env.d.ts
 
 # worktree directories (optional - uncomment if you want to ignore worktree directories)
 # .worktrees/
-.cursor/

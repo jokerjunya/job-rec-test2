@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { validateResetToken } from '@/utils/auth';
 
 /**
- * パスワードリセットページ
+ * パスワードリセットページコンテンツ
  */
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const [token, setToken] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -168,6 +168,23 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * パスワードリセットページ
+ */
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+          <div className="text-lg text-zinc-600 dark:text-zinc-400">読み込み中...</div>
+        </div>
+      }
+    >
+      <ResetPasswordContent />
+    </Suspense>
   );
 }
 
