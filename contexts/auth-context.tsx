@@ -7,6 +7,7 @@ import { getUserFromFirestore, convertFirebaseUser } from '@/lib/firebase/auth';
 import type { User } from '@/types/user';
 import {
   login as loginUser,
+  loginWithGoogle as loginWithGoogleUser,
   signUp as signUpUser,
   logout as logoutUser,
   requestPasswordReset as requestPasswordResetUser,
@@ -17,6 +18,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
@@ -60,6 +62,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return result;
   }, []);
 
+  const loginWithGoogle = useCallback(async () => {
+    const result = await loginWithGoogleUser();
+    // onAuthStateChangedが自動的にユーザー状態を更新するため、ここでsetUserは不要
+    return result;
+  }, []);
+
   const signUp = useCallback(async (email: string, password: string, name: string) => {
     const result = await signUpUser({ email, password, name });
     // onAuthStateChangedが自動的にユーザー状態を更新するため、ここでsetUserは不要
@@ -80,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signUp, logout, requestPasswordReset, resetPassword }}>
+    <AuthContext.Provider value={{ user, isLoading, login, loginWithGoogle, signUp, logout, requestPasswordReset, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,6 +5,7 @@
 export {
   signUp,
   login,
+  loginWithGoogle,
   logout,
   requestPasswordReset,
   resetPassword,

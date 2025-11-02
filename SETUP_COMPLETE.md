@@ -24,14 +24,22 @@
 ### Firebase Consoleでの設定（ブラウザで実施）
 
 #### 1. Authentication（認証）の有効化
-https://console.firebase.google.com/project/job-swipe-app-2025/authentication
+https://console.firebase.google.com/project/job-swipe-app-2025/authentication/providers
 
 手順：
 1. 上記URLにアクセス
-2. 「始める」ボタンをクリック
+2. 「始める」ボタンをクリック（初回のみ）
+
+**メール/パスワード認証:**
 3. 「メール/パスワード」を選択
 4. 「メール/パスワード」を有効化
 5. 「保存」をクリック
+
+**Google認証（推奨）:**
+6. 「Google」プロバイダーをクリック
+7. 「有効にする」トグルをONにする
+8. 「プロジェクトのサポートメール」を選択
+9. 「保存」をクリック
 
 #### 2. Firestore Database の確認
 https://console.firebase.google.com/project/job-swipe-app-2025/firestore
@@ -168,9 +176,13 @@ npm test
 - [x] Firestoreセキュリティルール デプロイ
 - [x] Firestoreインデックス デプロイ
 - [x] 開発サーバー起動
+- [x] **Googleログイン機能実装** 🆕
 - [ ] Firebase Authentication 有効化（手動）
+  - [ ] メール/パスワード認証
+  - [ ] Google認証（推奨）
 - [ ] Firestore Database 作成確認（手動）
 - [ ] 初回ユーザー登録テスト
+- [ ] Googleログインテスト 🆕
 - [ ] 求人データ閲覧テスト
 - [ ] フィードバック機能テスト
 
@@ -180,8 +192,13 @@ npm test
 
 残りの作業：
 1. Firebase Consoleで Authentication を有効化
+   - メール/パスワード認証
+   - **Google認証（推奨）** 🆕
 2. Firestore Database の作成を確認
 3. アプリにアクセスしてテスト
+   - Googleログイン機能をお試しください！ 🚀
+
+📚 詳細な手順は `GOOGLE_AUTH_SETUP.md` をご確認ください。
 
 ご質問がある場合は遠慮なくお聞きください！
 

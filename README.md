@@ -9,7 +9,9 @@
 #### Firebase プロジェクトの作成
 1. [Firebase Console](https://console.firebase.google.com/)にアクセス
 2. 新しいプロジェクトを作成
-3. Authentication を有効化（メール/パスワード認証を有効化）
+3. Authentication を有効化
+   - メール/パスワード認証を有効化
+   - **Google認証を有効化** （推奨）
 4. Firestore Database を作成（テストモードで開始）
 
 #### 環境変数の設定
@@ -238,13 +240,14 @@ npm run migrate:firebase
 - **テスト**: Jest 29.7.0 + Testing Library
 - **アイコン**: Lucide React
 - **バックエンド**: Firebase (Authentication + Firestore)
-- **認証**: Firebase Authentication（メール/パスワード認証）
+- **認証**: Firebase Authentication（Google認証 + メール/パスワード認証）
 - **データベース**: Cloud Firestore
 
 ## 🔒 セキュリティとデータ管理
 
 ### Firebase Authentication
-- メール/パスワード認証を使用
+- **Googleアカウント認証** （ワンクリックログイン）
+- メール/パスワード認証
 - パスワードのハッシュ化と安全な保存は自動処理
 - パスワードリセット機能（メール送信）
 
