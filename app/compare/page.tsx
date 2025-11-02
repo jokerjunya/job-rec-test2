@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { getFeedbackData } from '@/utils/local-storage';
 import { getCurrentUserId } from '@/utils/auth';
+import { LoadingSpinner } from '@/components/loading-spinner';
 
 /**
  * 比較ペアの型定義
@@ -163,11 +164,7 @@ export default function ComparePage() {
   }, [user, isLoading, router]);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg text-zinc-600 dark:text-zinc-400">読み込み中...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
