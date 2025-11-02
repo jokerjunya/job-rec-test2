@@ -5,6 +5,8 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
   updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
   User as FirebaseUser,
   UserCredential,
 } from 'firebase/auth';
@@ -138,6 +140,62 @@ export async function login(
     }
     
     return { success: false, error: 'ログインに失敗しました' };
+  }
+}
+
+/**
+ * Googleアカウントでログイン
+ */
+export async function loginWithGoogle(): Promise<{ success: boolean; error?: string; user?: User }> {
+  try {
+    const provider = new GoogleAuthProvider();
+    // Google アカウントの選択を強制
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
+    const userCredential = await signInWithPopup(auth, provider);
+
+    // Firestoreからユーザー情報を取得
+    let user = await getUserFromFirestore(userCredential.user.uid);
+    
+    // 新規ユーザーの場合、Firestoreに保存
+    if (!user) {
+      user = {
+        id: userCredential.user.uid,
+        email: userCredential.user.email || '',
+        name: userCredential.user.displayName || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      await setDoc(doc(db, 'users', user.id), {
+        ...user,
+        createdAt: serverTimestamp(),
+      });
+    }
+
+    return { success: true, user };
+  } catch (error: unknown) {
+    console.error('Google login error:', error);
+    
+    if (error instanceof Error) {
+      const errorCode = (error as { code?: string }).code;
+      
+      switch (errorCode) {
+        case 'auth/popup-closed-by-user':
+          return { success: false, error: 'ログインがキャンセルされました' };
+        case 'auth/popup-blocked':
+          return { success: false, error: 'ポップアップがブロックされました。ポップアップを許可してください' };
+        case 'auth/cancelled-popup-request':
+          return { success: false, error: 'ログインがキャンセルされました' };
+        case 'auth/account-exists-with-different-credential':
+          return { success: false, error: 'このメールアドレスは別の方法で登録されています' };
+        default:
+          return { success: false, error: 'Googleログインに失敗しました' };
+      }
+    }
+    
+    return { success: false, error: 'Googleログインに失敗しました' };
   }
 }
 
