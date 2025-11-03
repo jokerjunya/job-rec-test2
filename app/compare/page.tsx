@@ -236,18 +236,18 @@ export default function ComparePage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:py-8 sm:px-6 lg:px-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             求人を比較
           </h1>
-          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-base sm:text-lg text-zinc-600 dark:text-zinc-400">
             どちらがいいですか?
           </p>
         </div>
 
         {/* 統計情報 */}
-        <div className="mb-6 flex gap-4 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="mb-4 sm:mb-6 flex gap-3 sm:gap-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
           <div>比較回数: {comparisonCount}</div>
           <div>残りペア数: {remainingPairs.length}</div>
         </div>

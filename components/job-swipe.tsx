@@ -134,14 +134,14 @@ export function JobSwipe({ jobs }: JobSwipeProps) {
   }
 
   return (
-    <div className="relative flex min-h-[600px] items-center justify-center">
-      {/* キーボードヒント */}
+    <div className="relative flex min-h-[500px] sm:min-h-[600px] items-center justify-center px-2 sm:px-0">
+      {/* キーボードヒント（デスクトップのみ） */}
       {showKeyboardHint && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="absolute top-0 left-1/2 -translate-x-1/2 z-10"
+          className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 z-10"
         >
           <div className="flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/30 px-4 py-2 text-xs font-medium text-blue-900 dark:text-blue-300 shadow-md">
             <Info className="h-4 w-4" />
@@ -152,7 +152,7 @@ export function JobSwipe({ jobs }: JobSwipeProps) {
 
       {/* カード（タッチジェスチャー対応） */}
       <motion.div
-        className="absolute w-full max-w-md cursor-grab active:cursor-grabbing"
+        className="absolute w-full max-w-md cursor-grab active:cursor-grabbing px-2 sm:px-0"
         style={{
           x,
           rotate,
@@ -161,13 +161,13 @@ export function JobSwipe({ jobs }: JobSwipeProps) {
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={handleDragEnd}
-        whileTap={{ scale: 1.05 }}
+        whileTap={{ scale: 1.02 }}
       >
         <JobCard job={currentJob} />
-        
+
         {/* スワイプインジケーター */}
         <motion.div
-          className="absolute top-4 right-4 rounded-lg border-4 border-blue-600 bg-blue-100 dark:bg-blue-900/30 px-6 py-3 text-2xl font-bold text-blue-600 dark:text-blue-400 rotate-12 opacity-0"
+          className="absolute top-4 right-4 rounded-lg border-2 sm:border-4 border-blue-600 bg-blue-100 dark:bg-blue-900/30 px-3 sm:px-6 py-2 sm:py-3 text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400 rotate-12 opacity-0"
           style={{
             opacity: useTransform(x, [0, 100], [0, 1]),
           }}
@@ -175,7 +175,7 @@ export function JobSwipe({ jobs }: JobSwipeProps) {
           LIKE
         </motion.div>
         <motion.div
-          className="absolute top-4 left-4 rounded-lg border-4 border-red-600 bg-red-100 dark:bg-red-900/30 px-6 py-3 text-2xl font-bold text-red-600 dark:text-red-400 -rotate-12 opacity-0"
+          className="absolute top-4 left-4 rounded-lg border-2 sm:border-4 border-red-600 bg-red-100 dark:bg-red-900/30 px-3 sm:px-6 py-2 sm:py-3 text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400 -rotate-12 opacity-0"
           style={{
             opacity: useTransform(x, [-100, 0], [1, 0]),
           }}
@@ -185,30 +185,30 @@ export function JobSwipe({ jobs }: JobSwipeProps) {
       </motion.div>
 
       {/* フィードバックボタン */}
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 gap-4 z-10">
+      <div className="absolute bottom-4 sm:bottom-8 left-1/2 flex -translate-x-1/2 gap-3 sm:gap-4 z-10">
         <button
           type="button"
           onClick={() => handleFeedback('dislike')}
           disabled={isAnimating}
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-lg transition-all hover:scale-110 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-900/30 dark:text-red-400 focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
+          className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-red-100 text-red-600 shadow-lg transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-900/30 dark:text-red-400 focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
           aria-label="よくないね（矢印左キー）"
         >
-          <ThumbsDown className="h-8 w-8" />
+          <ThumbsDown className="h-7 w-7 sm:h-8 sm:w-8" />
         </button>
         <button
           type="button"
           onClick={() => handleFeedback('like')}
           disabled={isAnimating}
-          className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 shadow-lg transition-all hover:scale-110 hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-900/30 dark:text-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+          className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 shadow-lg transition-all hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-900/30 dark:text-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
           aria-label="いいね（矢印右キー）"
         >
-          <ThumbsUp className="h-8 w-8" />
+          <ThumbsUp className="h-7 w-7 sm:h-8 sm:w-8" />
         </button>
       </div>
 
       {/* プログレス表示 */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2">
-        <div className="rounded-full bg-white/80 px-4 py-2 text-sm font-medium text-zinc-900 shadow-md dark:bg-zinc-800 dark:text-zinc-100 backdrop-blur-sm">
+      <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2">
+        <div className="rounded-full bg-white/80 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-900 shadow-md dark:bg-zinc-800 dark:text-zinc-100 backdrop-blur-sm">
           {currentIndex + 1} / {jobs.length}
         </div>
       </div>

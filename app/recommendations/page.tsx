@@ -117,18 +117,18 @@ export default function RecommendationsPage() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* ヘッダー */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             あなたへのおすすめ
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             協調フィルタリングによる求人推薦システム
           </p>
         </div>
         
         {/* データソース切り替え */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3">
             <div className="flex-1">
               <h3 className="font-semibold text-blue-900 mb-1">
                 📊 デモモード
@@ -144,10 +144,10 @@ export default function RecommendationsPage() {
                 )}
               </p>
             </div>
-            
+
             <button
               onClick={toggleDataSource}
-              className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              className="w-full sm:w-auto sm:ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium whitespace-nowrap"
             >
               {useRealData ? 'ダミーデータに切替' : '実データに切替'}
             </button>

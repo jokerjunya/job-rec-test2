@@ -18,6 +18,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: '求人マッチング | JobRec',
   description: 'マッチングアプリ風の求人アプリ。フィードバック機能でお気に入りの求人を保存しましょう。',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
